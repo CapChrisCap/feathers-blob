@@ -32,3 +32,6 @@ lib/
 
 # temporary test data
 /test/blobs
+
+# editor files
+.idea

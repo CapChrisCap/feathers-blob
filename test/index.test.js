@@ -1,6 +1,7 @@
 import assert from 'assert';
 import { join } from 'path';
 import BlobService from '../src';
+import nock from 'nock';
 import FsBlobStore from 'fs-blob-store';
 import { getBase64DataURI } from 'dauria';
 
@@ -74,6 +75,47 @@ describe('feathers-blob-store', () => {
     }).then(res => {
       assert.equal(res.id, contentId);
       assert.equal(res.uri, contentUri);
+      assert.equal(res.size, content.length);
+
+      // test successful remove
+      return store.remove(contentId);
+    }).then(res => {
+      assert.equal(res, null);
+
+      // test failing get
+      return store.get(contentId).catch(err =>
+        assert.ok(err, '.get() to non-existent id should error')
+      );
+    });
+  });
+
+  it('basic functionality with remote file', () => {
+    assert.equal(typeof BlobService, 'function', 'exports factory function');
+
+    const remoteContent = 'hello world!';
+    nock('http://test.de')
+      .get('/image.jpg')
+      .reply(200, remoteContent);
+
+    const blobStore = FsBlobStore(join(__dirname, 'blobs'));
+    const store = BlobService({
+      Model: blobStore
+    });
+
+    const content = Buffer.from(remoteContent);
+    const contentUri = 'http://test.de/image.jpg';
+    const contentId = 'image.jpg';
+
+    return store.create({ uri: contentUri }).then(res => {
+      assert.equal(res.id, contentId);
+      assert.equal(res.uri, contentUri);
+      assert.equal(res.size, content.length);
+
+      // test successful get
+      return store.get(contentId);
+    }).then(res => {
+      assert.equal(res.id, contentId);
+      assert.equal(res.uri, getBase64DataURI(content, 'image/jpeg'));
       assert.equal(res.size, content.length);
 
       // test successful remove
