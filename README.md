@@ -89,6 +89,39 @@ blobService.create(blob).then(function (result) {
 });
 ```
 
+or for remote files:
+
+```js
+import { getBase64DataURI } from 'dauria';
+import AWS from 'aws-sdk';
+import S3BlobStore from 's3-blob-store';
+import BlobService from 'feathers-blob';
+
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+});
+
+const blobStore = S3BlobStore({
+  client: s3,
+  bucket: 'feathers-blob'
+});
+
+const blobService = BlobService({
+  Model: blobStore
+});
+
+const blob = {
+  uri: 'http://test.de/image.jpg'
+}
+
+blobService.create(blob).then(function (result) {
+  console.log('Stored blob with id', result.id);
+}).catch(err => {
+  console.error(err);
+});
+```
+
 Should you need to change your bucket's [options](http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property), such as permissions, pass a `params.s3` object using a before hook.
 
 ```js

@@ -1,7 +1,7 @@
 {
   "name": "feathers-blob-remote",
   "description": "Feathers blob service with support of remote files",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "homepage": "https://github.com/CapChrisCap/feathers-blob/tree/feature/request",
   "main": "lib/",
   "keywords": [
@@ -18,12 +18,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/feathersjs/feathers-blob.git"
+    "url": "git://github.com/CapChrisCap/feathers-blob.git"
   },
   "author": {
-    "name": "Feathers contributors",
-    "email": "hello@feathersjs.com",
-    "url": "https://feathersjs.com"
+    "name": "Christoph Caprano",
+    "email": "info@christoph-caprano.de",
+    "url": "https://www.christoph-caprano.de"
   },
   "contributors": [],
   "bugs": {
@@ -34,7 +34,7 @@
   },
   "scripts": {
     "prepublish": "npm run compile",
-    "publish": "git push origin --tags && npm run changelog && git push origin",
+    "publish": "git push origin --tags && git push origin",
     "changelog": "github_changelog_generator && git add CHANGELOG.md && git commit -am \"Updating changelog\"",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
